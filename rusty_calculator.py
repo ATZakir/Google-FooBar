@@ -1,64 +1,42 @@
+def answer(string):
 
-string = '2*3*2'
-digits = '0123456789'
-operands = '+*'
-newstring = []
+	string = list(string)
 
-newstring.append(string[0])
-skip = False
-for index in range(1,len(string)):
-	#print 'Location:'
-	#print index
-	#print 'New String:'
-	#print newstring
-	if string[index] == '*' and not skip:
-		#print 'Found asterix'
-		next_digit = string[index+1]
-		back_index = index - 1
-		while newstring[back_index] == '*' and back_index>0:
-			back_index = back_index - 1
-		newstring.insert(back_index+1,next_digit)
-		newstring.append('*')
-		skip = True
+	asterisk_count = 0
+	index = 0
 
-
-	elif not skip:
-		#print 'skipped'
-		newstring.append(string[index])
-	else:
-		#print 'Reset skip'
-		skip = False
-	#print 'Status'
-	#print newstring
-print 'String:'
-print string
-print 'First pass:'
-print ''.join(newstring)
-
-popped = False
-for index2 in range(1,len(string)):
-	print 'Index2:'
-	print index2
-	print newstring
-	if popped and newstring[index2] == '*':
-		print 'Found asterix'
-		
-		if index2 == len(newstring)-1:
-			newstring.append('+')
+	while index < len(string):
+		if string[index] == "*":
+			string.pop(index)
+			asterisk_count+=1
+		elif string[index] == '+' and asterisk_count > 0:
+			for replace in range(asterisk_count):
+				string.insert(index,'*')
+			index+=asterisk_count
+			asterisk_count = 0
 		else:
-			newstring.insert[index2+1,'+']
-			popped = False
+			index+=1
 
-	if newstring[index2] == '+' and not popped:
-		print 'Popped'
-		newstring.pop(index2)
-		popped = True
+	if asterisk_count > 0:
+		for replace in range(asterisk_count):
+			string.insert(index,'*')
 
 
-print 'Second Pass:'
-print ''.join(newstring)
+	plus_count = 0
+	index2 = 0
 
-# 2*2+2
+	while index2 < len(string):
+		if string[index2] == '+':
+			string.pop(index2)
+			plus_count+=1
+		else:
+			index2+=1
 
+	if plus_count > 0:
+		for replace in range(plus_count):
+			string.insert(index2,'+')
+
+
+	return ''.join(string)
 
 
