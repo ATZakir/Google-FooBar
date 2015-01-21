@@ -1,28 +1,19 @@
-def digesting(eye, eye_minus):
-
-	digest = ((129 * eye) ^ eye_minus) % 256
-
-	return digest
-
-def step(digest,prev_m,k):
-
-	return ((digest+k*256) ^ prev_m) / 129
+def step(digest,prev_m):
+	k = 0
+	while True:
+		rem = ((digest ^ prev_m) + k * 256) % 129
+		if rem == 0:
+			return ((digest ^ prev_m) + k * 256) / 129
+		else:
+			k = k + 1
 
 def answer(digest):
-
+	prev = 0
 	message = []
-
-	for index, d in enumerate(digest):
-		print d
+	for index, num in enumerate(digest):
 		if index == 0:
-			message.append(step(d,0,0))
-			continue
-
-		for k in range(1000000):
-			test_m = step(d,message[-1],k)
-			if digesting(test_m,message[-1]) != d:
-				continue
-			message.append(test_m)
-			break
+			message.append(step(num,0))
+		else:
+			message.append(step(num,message[-1]))
 
 	return message
